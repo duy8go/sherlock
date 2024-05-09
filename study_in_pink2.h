@@ -83,7 +83,7 @@ class MapElement {
 protected:
     ElementType type;
 public:
-    MapElement(ElementType in_type){
+    MapElement(ElementType in_type = PATH){
         type = in_type;
     };
     virtual ~MapElement(){};
@@ -143,9 +143,9 @@ public:
     Map(int num_rows, int num_cols, int num_walls, Position * array_walls, int num_fake_walls, Position * array_fake_walls) : num_rows(num_rows), num_cols(num_cols){
         map = new MapElement*[num_rows];
         for ( int i = 0; i < num_rows; i++){
-            map[i]= new MapElement*[num_cols];
+            map[i]= new MapElement[num_cols];
             for ( int j = 0;j < num_cols; j++){
-                map[i][j] =  nullptr;
+                map[i][j] =  MapElement();
             }
         }
         for ( int i = 0; i < num_walls; i++){
@@ -163,9 +163,9 @@ public:
     };
     ~Map(){
         for (int i = 0; i < num_rows; i++){
-            for (int j = 0; j < num_cols; j++){
-                delete map[i][j];
-            }
+            // for (int j = 0; j < num_cols; j++){
+            //     delete map[i][j];
+            // }
             delete[] map[i];
         }
         delete[] map;
@@ -173,137 +173,161 @@ public:
     bool isValid ( const Position & pos , MovingObject * mv_obj ) const{} ;
 };
 
-// class Sherlock: public MovingObject /* TODO */ {
-// private:
-//     // TODO
-//     int hp;
-//     int exp;
-//     string moving_rule;
-// public:
-//     Sherlock(int index, const string & moving_rule, const Position & init_pos, Map * map, int init_hp, int init_exp)
-//     :MovingObject(index, init_pos,map,"Sherlock"), hp(init_hp),exp(init_exp),moving_rule(moving_rule){
-//         if ( hp > 500) hp = 500;
-//         if ( hp <= 0) hp = 0;
-//         if ( exp > 900) exp = 900;
-//         if ( exp <= 0) exp = 0;
-//     };
-//     Position getNextPosition(){
-//         static int c_index = 0;
-//         char a = moving_rule[c_index++];
-//         if (c_index == moving_rule.length()){
-//             c_index = 0;
-//         }
-//         Position next_pos = getCurrentPosition();
-//         if ( a == 'L'){
-//             next_pos.setCol(next_pos.getCol()-1);
-//         }
-//         if ( a == 'R'){
-//             next_pos.setCol(next_pos.getCol() +1);
-//         }
-//         if (a == 'U'){
-//             next_pos.setRow(next_pos.getRow()+1);
-//         }
-//         if ( a == 'D'){
-//             next_pos.setCol(next_pos.getRow()-1);
-//         }
-//         if ( map->isValid(next_pos, this)){
-//             return next_pos;
-//         }else return Position::npos;
+class Sherlock: public MovingObject /* TODO */ {
+private:
+    // TODO
+    int hp;
+    int exp;
+    string moving_rule;
+public:
+    Sherlock(int index, const string & moving_rule, const Position & init_pos, Map * map, int init_hp, int init_exp)
+    :MovingObject(index, init_pos,map,"Sherlock"), hp(init_hp),exp(init_exp),moving_rule(moving_rule){
+        if ( hp > 500) hp = 500;
+        if ( hp <= 0) hp = 0;
+        if ( exp > 900) exp = 900;
+        if ( exp <= 0) exp = 0;
+    };
+    Position getNextPosition(){
+        static int c_index = 0;
+        char a = moving_rule[c_index++];
+        if (c_index == moving_rule.length()){
+            c_index = 0;
+        }
+        Position next_pos = getCurrentPosition();
+        if ( a == 'L'){
+            next_pos.setCol(next_pos.getCol()-1);
+        }
+        if ( a == 'R'){
+            next_pos.setCol(next_pos.getCol() +1);
+        }
+        if (a == 'U'){
+            next_pos.setRow(next_pos.getRow()+1);
+        }
+        if ( a == 'D'){
+            next_pos.setCol(next_pos.getRow()-1);
+        }
+        if ( map->isValid(next_pos, this)){
+            return next_pos;
+        }else return Position::npos;
         
-//     }
-//     void move(){
-//         Position next_pos = getNextPosition();
-//         if ( next_pos != Position::npos ){
-//             pos =  next_pos;
-//         }
-//     }
-//     string str(){
-//         return "Sherlock[index=" + to_string(index) + ";" + "pos=" + to_string(pos) + ";moving_rule=" + moving_rule +"]";
-//     }
-//     // ...
-// };
+    }
+    void move(){
+        Position next_pos = getNextPosition();
+        if ( next_pos != Position::npos ){
+            pos =  next_pos;
+        }
+    }
+    string str(){
+        return "Sherlock[index=" + to_string(index) + ";" + "pos=" + to_string(pos) + ";moving_rule=" + moving_rule +"]";
+    }
+    // ...
+};
 
-// class Watson: public MovingObject /* TODO */ {
-// private:
-//     // TODO
-//     int hp;
-//     int exp;
-//     string moving_rule;
-// public:
-//     Watson(int index, const string & moving_rule, const Position & init_pos, Map * map, int init_hp, int init_exp)
-//     :MovingObject(index, init_pos,map,"Watson"), hp(init_hp),exp(init_exp),moving_rule(moving_rule){
-//         if ( hp > 500) hp = 500;
-//         if ( hp <= 0) hp = 0;
-//         if ( exp > 900) exp = 900;
-//         if ( exp <= 0) exp = 0;
-//     };
-//     Position getNextPosition(){
-//         static int c_index = 0;
-//         char a = moving_rule[c_index++];
-//         if (c_index == moving_rule.length()){
-//             c_index = 0;
-//         }
-//         Position next_pos = getCurrentPosition();
-//         if ( a == 'L'){
-//             next_pos.setCol(next_pos.getCol()-1);
-//         }
-//         if ( a == 'R'){
-//             next_pos.setCol(next_pos.getCol() +1);
-//         }
-//         if (a == 'U'){
-//             next_pos.setRow(next_pos.getRow()+1);
-//         }
-//         if ( a == 'D'){
-//             next_pos.setCol(next_pos.getRow()-1);
-//         }
-//         if ( map->isValid(next_pos, this)){
-//             return next_pos;
-//         }else return Position::npos;
+class Watson: public MovingObject /* TODO */ {
+private:
+    // TODO
+    int hp;
+    int exp;
+    string moving_rule;
+public:
+    Watson(int index, const string & moving_rule, const Position & init_pos, Map * map, int init_hp, int init_exp)
+    :MovingObject(index, init_pos,map,"Watson"), hp(init_hp),exp(init_exp),moving_rule(moving_rule){
+        if ( hp > 500) hp = 500;
+        if ( hp <= 0) hp = 0;
+        if ( exp > 900) exp = 900;
+        if ( exp <= 0) exp = 0;
+    };
+    Position getNextPosition(){
+        static int c_index = 0;
+        char a = moving_rule[c_index++];
+        if (c_index == moving_rule.length()){
+            c_index = 0;
+        }
+        Position next_pos = getCurrentPosition();
+        if ( a == 'L'){
+            next_pos.setCol(next_pos.getCol()-1);
+        }
+        if ( a == 'R'){
+            next_pos.setCol(next_pos.getCol() +1);
+        }
+        if (a == 'U'){
+            next_pos.setRow(next_pos.getRow()+1);
+        }
+        if ( a == 'D'){
+            next_pos.setCol(next_pos.getRow()-1);
+        }
+        if ( map->isValid(next_pos, this)){
+            return next_pos;
+        }else return Position::npos;
         
-//     }
-//     void move(){
-//         Position next_pos = getNextPosition();
-//         if ( next_pos != Position::npos ){
-//             pos =  next_pos;
-//         }
-//     }
-//     string str(){
-//         return "Watson[index=" + to_string(index) + ";" + "pos=" + to_string(pos) + ";moving_rule=" + moving_rule +"]";
-//     }
-//     // getNextPosition
-//     // move
-//     // str
-//     // ...
-// };
-// int Manhattan(Position p1, Position p2){
-//     return abs(p1.getRow()-p2.getRow()) + abs(p1.getCol()-p2.getCol());
-// }
-// class Criminal:public MovingObject /* TODO */ {
-// private:
-//     // TODO
+    }
+    void move(){
+        Position next_pos = getNextPosition();
+        if ( next_pos != Position::npos ){
+            pos =  next_pos;
+        }
+    }
+    string str(){
+        return "Watson[index=" + to_string(index) + ";" + "pos=" + to_string(pos) + ";moving_rule=" + moving_rule +"]";
+    }
+    // getNextPosition
+    // move
+    // str
+    // ...
+};
+int Manhattan(Position p1, Position p2){
+    return abs(p1.getRow()-p2.getRow()) + abs(p1.getCol()-p2.getCol());
+}
+int Max4(int a, int b, int c, int d){
+    int max = a;
+    if ( max < b) max = b;
+    if ( max < c) max = c;
+    if ( max < d) max = d;
+    return max;
+}
+class Criminal:public MovingObject /* TODO */ {
+private:
+    // TODO
     
-// public:
-//     Criminal(int index, const Position & init_pos, Map * map, Sherlock * sherlock, Watson * watson)
-//     :MovingObject(index, pos, map,"Criminal"){};
-//     Position getNextPosition(){
-//         // move U
-//         Position next_pos_U;
-//         next_pos_U.setRow(init_pos.getRow()+1);
-//         next_pos_U.setCol(inti_pos.getCol())
-//         int d_U = Manhattan(next_pos_U, sherlock.getNextPosition())
-//     }
-//     void move(){
-//         Position next_pos = getNextPosition();
-//         if ( next_pos != Position::npos ){
-//             pos =  next_pos;
-//         }
-//     }
-//     string str(){
-//         return "Criminal[index=" + to_string(index) + ";" + "pos=" + to_string(pos)+"]";
-//     }
+public:
+    Criminal(int index, const Position & init_pos, Map * map, Sherlock * sherlock, Watson * watson)
+    :MovingObject(index, pos, map,"Criminal"){};
+    Position getNextPosition(){
+        // move U
+        Position next_pos_U;
+        next_pos_U.setRow(init_pos.getRow()+1);
+        next_pos_U.setCol(inti_pos.getCol());
+        int d_U = Manhattan(next_pos_U, sherlock.getNextPosition()) 
+        + Manhattan(next_pos_U, watson.getNextPosition());
+        Position next_pos_D;
+        next_pos_D.setRow(init_pos.getRow()-1);
+        next_pos_D.setCol(init_pos.getCol());
+        int d_D = Manhattan(next_pos_U,sherlock.getNextPosition()) 
+        + Manhattan(next_pos_U, sherlock.getNextPosition());
+        Position next_pos_R;
+        next_pos_R.setRow(init_pos.getRow());
+        next_pos_R.setCol(init_pos.getCol()+1);
+        int d_R = Manhattan(next_pos_R,sherlock.getNextPosition()) 
+        + Manhattan(next_pos_R, sherlock.getNextPosition());
+         Position next_pos_L;
+        next_pos_L.setRow(init_pos.getRow());
+        next_pos_L.setCol(init_pos.getCol()+1);
+        int d_L = Manhattan(next_pos_L,sherlock.getNextPosition()) 
+        + Manhattan(next_pos_L, sherlock.getNextPosition());
+        
+    }
+    void move(){
+        Position next_pos = getNextPosition();
+        if ( next_pos != Position::npos ){
+            pos =  next_pos;
+        }
+    }
+    string str(){
+        return "Criminal[index=" + to_string(index) + ";" + "pos=" + to_string(pos)+"]";
+    }
     
-//     // ...
-// };
+    // ...
+};
 
 // class ArrayMovingObject {
 // private:
